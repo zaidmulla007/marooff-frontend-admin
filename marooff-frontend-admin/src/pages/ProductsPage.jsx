@@ -218,10 +218,12 @@ export default function ProductsPage() {
                 <td>{fromMinor(p.price_minor, p.currency)}</td>
                 <td className={p.stock <= 5 ? 'text-red-600 font-semibold' : ''}>{p.stock}</td>
                 <td className="space-x-1">
-                  {p.is_active   ? <span className="badge bg-green-100 text-green-700">Live</span> : <span className="badge bg-ink-100 text-ink-700">Off</span>}
-                  {p.is_featured ? <span className="badge bg-amber-100 text-amber-700">Feat</span> : null}
-                  {p.is_new      ? <span className="badge bg-brand-50 text-brand-700">New</span> : null}
-                  {p.is_bestseller ? <span className="badge bg-pink-100 text-pink-700">Best</span> : null}
+                  {Number(p.is_active) === 1
+                    ? <span className="badge bg-green-100 text-green-700">Live</span>
+                    : <span className="badge bg-ink-100 text-ink-700">Off</span>}
+                  {Number(p.is_featured)   === 1 && <span className="badge bg-amber-100 text-amber-700">Feat</span>}
+                  {Number(p.is_new)        === 1 && <span className="badge bg-brand-50 text-brand-700">New</span>}
+                  {Number(p.is_bestseller) === 1 && <span className="badge bg-pink-100 text-pink-700">Best</span>}
                 </td>
                 <td className="text-right whitespace-nowrap">
                   <Link to={`/products/${p.id}`} className="text-brand-600 hover:underline text-sm mr-3">Edit</Link>

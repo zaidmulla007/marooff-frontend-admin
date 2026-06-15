@@ -15,6 +15,7 @@ import OrdersPage from './pages/OrdersPage';
 import OrderDetailPage from './pages/OrderDetailPage';
 import SalesPage from './pages/SalesPage';
 import CouponsPage from './pages/CouponsPage';
+import NewsletterPage from './pages/NewsletterPage';
 import SettingsPage from './pages/SettingsPage';
 
 function RequireAuth({ children }) {
@@ -53,6 +54,7 @@ export default function App() {
             <Route path="orders" element={<OrdersPage />} />
             <Route path="orders/:id" element={<OrderDetailPage />} />
             <Route path="coupons" element={<CouponsPage />} />
+            <Route path="newsletter" element={<NewsletterPage />} />
             <Route path="enquiries" element={<EnquiriesPage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>

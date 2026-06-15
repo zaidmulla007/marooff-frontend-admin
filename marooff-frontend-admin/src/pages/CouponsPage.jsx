@@ -30,7 +30,7 @@ export default function CouponsPage() {
       value_minor: row.value_minor,
       min_order_minor: row.min_order_minor,
       max_uses: row.max_uses ?? '',
-      is_active: row.is_active ? 1 : 0,
+      is_active: Number(row.is_active) === 1 ? 1 : 0,
       starts_at: row.starts_at ?? '',
       ends_at: row.ends_at ?? '',
       notes: row.notes ?? '',

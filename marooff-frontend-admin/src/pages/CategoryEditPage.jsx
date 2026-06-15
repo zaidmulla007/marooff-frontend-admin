@@ -3,7 +3,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { get, post, put } from '../lib/api';
 import ImageUpload from '../components/ImageUpload';
 
-const empty = { slug: '', name: '', description: '', image_url: '', sort_order: 0, is_active: 1 };
+const empty = { slug: '', name: '', description: '', image_url: '', banner_url: '', sort_order: 0, is_active: 1 };
 
 export default function CategoryEditPage() {
   const { id } = useParams();
@@ -58,7 +58,24 @@ export default function CategoryEditPage() {
           <label className="label">Description</label>
           <textarea className="input min-h-[100px]" value={data.description || ''} onChange={(e) => field('description', e.target.value)} />
         </div>
-        <ImageUpload label="Image" value={data.image_url} onChange={(url) => field('image_url', url || '')} />
+        <div className="space-y-4">
+          <div>
+            <ImageUpload
+              label="Card image (square, used on the home Shop-by-category tiles & sidebar)"
+              value={data.image_url}
+              onChange={(url) => field('image_url', url || '')}
+            />
+            <p className="text-xs text-ink-500 mt-1">Recommended ~600×750. Shown as a tile on the storefront home page.</p>
+          </div>
+          <div>
+            <ImageUpload
+              label="Banner image (wide, used as the hero banner on /category/<slug>)"
+              value={data.banner_url}
+              onChange={(url) => field('banner_url', url || '')}
+            />
+            <p className="text-xs text-ink-500 mt-1">Recommended ~1920×600. If empty, the storefront falls back to the card image.</p>
+          </div>
+        </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="label">Sort order</label>
@@ -66,7 +83,7 @@ export default function CategoryEditPage() {
           </div>
           <div>
             <label className="label">Status</label>
-            <select className="input" value={data.is_active ? '1' : '0'} onChange={(e) => field('is_active', Number(e.target.value))}>
+            <select className="input" value={Number(data.is_active) === 1 ? '1' : '0'} onChange={(e) => field('is_active', Number(e.target.value))}>
               <option value="1">Active</option>
               <option value="0">Hidden</option>
             </select>

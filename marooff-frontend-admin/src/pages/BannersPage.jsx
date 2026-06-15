@@ -31,7 +31,7 @@ export default function BannersPage() {
   }
 
   function edit(b) {
-    setDraft({ ...b, is_active: b.is_active ? 1 : 0 });
+    setDraft({ ...b, is_active: Number(b.is_active) === 1 ? 1 : 0 });
     setEditingId(b.id);
   }
 

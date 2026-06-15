@@ -31,7 +31,7 @@ export default function ComboEditPage() {
           price_aed:      minorToInputString(c.price_minor),
           sale_price_aed: minorToInputString(c.sale_price_minor),
           currency: c.currency || 'AED',
-          stock: c.stock || 0, is_active: c.is_active ? 1 : 0,
+          stock: c.stock || 0, is_active: Number(c.is_active) === 1 ? 1 : 0,
           sort_order: c.sort_order || 0,
         });
         setItems(c.items || []);

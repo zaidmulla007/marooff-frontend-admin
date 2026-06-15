@@ -42,16 +42,37 @@ export default function OrderDetailPage() {
   const a = order.shipping_address;
 
   return (
-    <div>
+    <div className="print-area">
+      {/* Print-only header (hidden on screen, shown when printing) */}
+      <div className="hidden print:block mb-4">
+        <div className="flex items-center justify-between border-b border-ink-200 pb-2">
+          <div>
+            <div className="font-serif text-2xl font-bold text-brand-700">Marooff</div>
+            <div className="text-xs text-ink-500">Maroof Fakhree Centre L.L.C. · Deira, Dubai, UAE</div>
+          </div>
+          <div className="text-right text-xs text-ink-500">
+            <div>Printed {new Date().toISOString().slice(0,16).replace('T', ' ')}</div>
+          </div>
+        </div>
+      </div>
+
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <Link to="/orders" className="text-sm text-ink-500 hover:underline">← Back to orders</Link>
+          <Link to="/orders" className="text-sm text-ink-500 hover:underline print:hidden">← Back to orders</Link>
           <h1 className="text-2xl font-semibold mt-1">{order.order_number}</h1>
           <div className="text-sm text-ink-500">Placed {(order.placed_at || '').replace('T', ' ').slice(0, 16)}</div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className={`badge ${STATUS_STYLE[order.status] || ''}`}>{order.status}</span>
           <span className="badge bg-ink-100 text-ink-700 uppercase">{order.payment_method} · {order.payment_status}</span>
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="print:hidden text-sm font-semibold bg-brand-600 text-white rounded-md px-4 py-1.5 hover:bg-brand-700 inline-flex items-center gap-2"
+            title="Print or save as PDF (Ctrl+P → Save as PDF)"
+          >
+            🖨 Print / PDF
+          </button>
         </div>
       </div>
 
@@ -78,7 +99,7 @@ export default function OrderDetailPage() {
 
         {/* Totals + customer + status changer */}
         <div className="space-y-4">
-          <div className="card p-5">
+          <div className="card p-5 print:hidden">
             <h2 className="font-semibold mb-3">Totals</h2>
             <dl className="text-sm space-y-1">
               <Row label="Subtotal" value={fromMinor(order.subtotal_minor, order.currency)} />
@@ -121,7 +142,7 @@ export default function OrderDetailPage() {
             </div>
           )}
 
-          <div className="card p-5">
+          <div className="card p-5 print:hidden">
             <h2 className="font-semibold mb-2">Update status</h2>
             <div className="flex flex-wrap gap-2 text-sm">
               {STATUSES.map((s) => (

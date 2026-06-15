@@ -3,6 +3,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { get, post, put, del } from '../lib/api';
 import { minorToInputString, toMinor } from '../lib/money';
 import ImageUpload from '../components/ImageUpload';
+import VideoUpload from '../components/VideoUpload';
 
 const emptyForm = {
   category_id: '', slug: '', sku: '', name: '', brand: '',
@@ -49,10 +50,10 @@ export default function ProductEditPage() {
           sale_price_aed: minorToInputString(p.sale_price_minor),
           currency:       p.currency || 'AED',
           stock:          p.stock || 0,
-          is_active:      p.is_active ? 1 : 0,
-          is_featured:    p.is_featured ? 1 : 0,
-          is_new:         p.is_new ? 1 : 0,
-          is_bestseller:  p.is_bestseller ? 1 : 0,
+          is_active:      Number(p.is_active)     === 1 ? 1 : 0,
+          is_featured:    Number(p.is_featured)   === 1 ? 1 : 0,
+          is_new:         Number(p.is_new)        === 1 ? 1 : 0,
+          is_bestseller:  Number(p.is_bestseller) === 1 ? 1 : 0,
           position:       Number(p.position) || 0,
           main_image_url: p.main_image_url || '',
         });
@@ -114,13 +115,26 @@ export default function ProductEditPage() {
       return;
     }
     try {
-      const r = await post(`/admin/products/${id}/images`, { url, sort_order: images.length });
+      const r = await post(`/admin/products/${id}/images`, { url, media_type: 'image', sort_order: images.length });
+      setImages((x) => [...x, r]);
+    } catch (e) { alert(e.message); }
+  }
+
+  // Called when a gallery video finishes uploading. Receives { url, media_type }.
+  async function attachGalleryVideo({ url, media_type }) {
+    if (!url) return;
+    if (isNew) {
+      alert('Save the product first, then come back to add videos.');
+      return;
+    }
+    try {
+      const r = await post(`/admin/products/${id}/images`, { url, media_type, sort_order: images.length });
       setImages((x) => [...x, r]);
     } catch (e) { alert(e.message); }
   }
 
   async function removeImage(imgId) {
-    if (!window.confirm('Remove this image?')) return;
+    if (!window.confirm('Remove this media?')) return;
     try {
       await del(`/admin/products/${id}/images/${imgId}`);
       setImages((x) => x.filter((i) => i.id !== imgId));
@@ -323,7 +337,7 @@ export default function ProductEditPage() {
           </div>
 
           <div className="card p-5 space-y-4">
-            <h2 className="font-semibold">Images</h2>
+            <h2 className="font-semibold">Images &amp; videos</h2>
 
             <ImageUpload
               label="Main image"
@@ -333,31 +347,54 @@ export default function ProductEditPage() {
 
             {!isNew && (
               <div>
-                <label className="label">Gallery (additional images)</label>
+                <label className="label">Gallery (additional photos &amp; videos)</label>
                 <div className="flex flex-wrap gap-3 mb-3">
-                  {images.map((img, i) => (
-                    <div key={img.id} className="relative">
-                      <img src={img.url} alt="" className="w-24 h-24 object-cover rounded border border-ink-300" />
-                      {/* sort_order badge */}
-                      <span className="absolute top-1 left-1 bg-black/70 text-white text-[10px] font-bold rounded px-1.5 py-0.5">#{i + 1}</span>
-                      {/* reorder + main + remove */}
-                      <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-1 bg-white border border-ink-300 rounded shadow px-1 py-0.5">
-                        <button type="button" disabled={i === 0} onClick={() => moveImage(img.id, 'left')} className="text-xs px-1 disabled:opacity-30" title="Move left">◀</button>
-                        <button type="button" onClick={() => setAsMain(img)} className="text-xs px-1 text-brand-700" title="Set as main image">★</button>
-                        <button type="button" disabled={i === images.length - 1} onClick={() => moveImage(img.id, 'right')} className="text-xs px-1 disabled:opacity-30" title="Move right">▶</button>
+                  {images.map((img, i) => {
+                    const isVideo = (img.media_type === 'video');
+                    return (
+                      <div key={img.id} className="relative">
+                        {isVideo ? (
+                          <div className="w-24 h-24 rounded border border-ink-300 bg-black overflow-hidden relative">
+                            <video src={img.url} muted playsInline preload="metadata" className="w-full h-full object-cover" />
+                            <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                              <span className="bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center text-base">▶</span>
+                            </span>
+                          </div>
+                        ) : (
+                          <img src={img.url} alt="" className="w-24 h-24 object-cover rounded border border-ink-300" />
+                        )}
+                        {/* sort_order badge + type pill */}
+                        <span className="absolute top-1 left-1 bg-black/70 text-white text-[10px] font-bold rounded px-1.5 py-0.5">#{i + 1}</span>
+                        {isVideo && (
+                          <span className="absolute top-1 right-1 bg-red-600 text-white text-[9px] font-bold uppercase rounded px-1.5 py-0.5">Video</span>
+                        )}
+                        {/* reorder + main + remove */}
+                        <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex gap-1 bg-white border border-ink-300 rounded shadow px-1 py-0.5">
+                          <button type="button" disabled={i === 0} onClick={() => moveImage(img.id, 'left')} className="text-xs px-1 disabled:opacity-30" title="Move left">◀</button>
+                          {!isVideo && (
+                            <button type="button" onClick={() => setAsMain(img)} className="text-xs px-1 text-brand-700" title="Set as main image">★</button>
+                          )}
+                          <button type="button" disabled={i === images.length - 1} onClick={() => moveImage(img.id, 'right')} className="text-xs px-1 disabled:opacity-30" title="Move right">▶</button>
+                        </div>
+                        <button type="button" onClick={() => removeImage(img.id)} className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs" title="Delete">×</button>
                       </div>
-                      <button type="button" onClick={() => removeImage(img.id)} className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs" title="Delete">×</button>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
-                <ImageUpload
-                  key={images.length /* reset to empty state after each upload */}
-                  label={null}
-                  value={null}
-                  onChange={attachGalleryImage}
-                />
+                <div className="flex items-end gap-3 flex-wrap">
+                  <ImageUpload
+                    key={'img-' + images.length /* reset to empty state after each upload */}
+                    label={null}
+                    value={null}
+                    onChange={attachGalleryImage}
+                  />
+                  <VideoUpload
+                    key={'vid-' + images.length}
+                    onChange={attachGalleryVideo}
+                  />
+                </div>
                 <p className="text-xs text-ink-500 mt-2">
-                  ◀ ▶ reorder · ★ promote to main image · × delete. Each upload adds a new image to the end of the gallery.
+                  ◀ ▶ reorder · ★ promote to main image (photos only) · × delete. Videos play with a ▶ badge on the storefront thumbnail strip.
                 </p>
               </div>
             )}

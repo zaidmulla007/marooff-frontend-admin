@@ -23,3 +23,16 @@
   .table td    { @apply px-3 py-2 border-t border-ink-100 align-top; }
   .badge       { @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium; }
 }
+
+/* Print rules — used by Orders → 🖨 Print / PDF on the order detail page.
+   Strips the admin chrome and turns the order detail into a clean A4 packing slip. */
+@media print {
+  @page { size: A4; margin: 12mm; }
+  html, body { background: white !important; }
+  body { font-size: 12pt; }
+  .card { box-shadow: none !important; border: 1px solid #e5e7eb; }
+  /* Avoid breaking items across pages awkwardly */
+  li { break-inside: avoid; page-break-inside: avoid; }
+  /* Tighten margins around the page so it doesn't waste space */
+  main > div { padding: 0 !important; }
+}

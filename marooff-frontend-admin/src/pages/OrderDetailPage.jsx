@@ -47,7 +47,7 @@ export default function OrderDetailPage() {
       <div className="hidden print:block mb-4">
         <div className="flex items-center justify-between border-b border-ink-200 pb-2">
           <div>
-            <div className="font-serif text-2xl font-bold text-brand-700">Marooff</div>
+            <div className="font-serif text-2xl font-bold text-brand-700">Maroof</div>
             <div className="text-xs text-ink-500">Maroof Fakhree Centre L.L.C. · Deira, Dubai, UAE</div>
           </div>
           <div className="text-right text-xs text-ink-500">

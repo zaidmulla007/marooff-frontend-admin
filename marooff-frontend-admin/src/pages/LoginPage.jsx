@@ -29,7 +29,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
-          <div className="text-3xl font-bold text-brand-600">Marooff</div>
+          <div className="text-3xl font-bold text-brand-600">Maroof</div>
           <div className="text-sm text-ink-500">Admin CMS sign-in</div>
         </div>
         <form onSubmit={onSubmit} className="card p-6 space-y-4">

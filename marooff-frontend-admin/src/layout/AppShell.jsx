@@ -23,7 +23,7 @@ export default function AppShell() {
     <div className="flex min-h-full">
       <aside className="hidden md:flex md:flex-col w-64 bg-white border-r border-ink-100 print:!hidden">
         <div className="px-6 py-5 border-b border-ink-100">
-          <div className="text-2xl font-bold text-brand-600">Marooff</div>
+          <div className="text-2xl font-bold text-brand-600">Maroof</div>
           <div className="text-xs text-ink-500 mt-0.5">Admin CMS</div>
         </div>
         <nav className="flex-1 px-2 py-3 space-y-1">
@@ -53,7 +53,7 @@ export default function AppShell() {
 
       <main className="flex-1 overflow-x-hidden">
         <header className="md:hidden bg-white border-b border-ink-100 px-4 py-3 flex items-center justify-between print:hidden">
-          <div className="font-bold text-brand-600">Marooff Admin</div>
+          <div className="font-bold text-brand-600">Maroof Admin</div>
           <button className="text-xs text-brand-600" onClick={() => { logout(); nav('/login'); }}>Sign out</button>
         </header>
         <div className="p-6">

@@ -30,7 +30,7 @@ export default function DashboardPage() {
   return (
     <div>
       <h1 className="text-2xl font-semibold text-ink-900">Dashboard</h1>
-      <p className="text-sm text-ink-500 mt-1">Overview of your Marooff store.</p>
+      <p className="text-sm text-ink-500 mt-1">Overview of your Maroof store.</p>
 
       {err && <div className="mt-4 rounded-md bg-red-50 text-red-700 px-3 py-2 text-sm">{err}</div>}
 
